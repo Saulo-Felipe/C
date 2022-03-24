@@ -73,14 +73,11 @@ int interface() {
 }
 
 int cadastro() {
-    system("@cls||clear");
-    printf("-=-=-=-=-=| Cadastro de paciente |-=-=-=-=-=\n\n");
 
-    char cpf[ 100 ];
-    char nome[ 100 ];
-    char endereco[ 100 ];
-    char telefone[ 100 ];
-    int idade;
+    char cpf[ 14 ];
+    char nome[ 50 ];
+    char endereco[ 50 ];
+    int idade, telefone;
  
     FILE *paPtr;
 
@@ -89,38 +86,40 @@ int cadastro() {
     }
 
     else {
-        printf("CPF do paciente: ");
-        scanf(" %[^\n]", cpf);
+        printf("Digite o CPF, o PRIMEIO NOME, o BAIRRO (OBS: CASO O BAIRRO SEJA COMPOSTO POR DUAS PALAVRAS, INSIRA APEMAS AS DUAS LETRAS INICIAIS DO NOME), a IDADE e o TELEFONE\n");
+        printf("Aperte CTRL + Z para terminar\n");
+        printf(": ");
 
-        while (strlen(cpf) != 11){
-            printf("Digite um CPF válido (11 digitos sem pontos ou tracos): ");
-            scanf(" %[^\n]", cpf);
-        }
+        scanf("%13s%s%s%d%d", cpf, nome, endereco, &idade, &telefone);
 
-        printf("Nome completo: ");
-        scanf(" %[^\n]", nome);
-
-        printf("Endereço: ");
-        scanf(" %[^\n]", endereco);
-
-        printf("Idade: ");
-        scanf("%d", &idade);
-
-        while (idade <= 0) {
+        if (idade <= 0){
+           
             printf("Digite uma idade maior que 0: ");
             scanf("%d", &idade);
+            
         }
+        if (strlen(cpf) >= 11 || strlen(cpf) <= 11){
 
-        printf("Telefone: ");
-        scanf(" %[^\n]", telefone);
+            printf("Digite um cpf valido (11 digitos sem pontos ou tracos): ");
+            scanf("%s", cpf);
 
-        fprintf(paPtr, "[%s] [%s] [%s] [%d] [%s]\n", cpf, nome, endereco, idade, telefone);
+        }
+            
+        /*while (!feof(stdin)){
+            scanf("%13s%s%s%d%d", cpf, nome, endereco, &idade, &telefone); 
+
+     
+
+        }*/
+        fprintf(paPtr, "%s %s %s %d %d\n", cpf, nome, endereco, idade, telefone);
         fclose(paPtr);
-        mensagemAlerta("\nPaciente cadastrado com sucesso!\n");
+        mensagemAlerta("\nCliente cadastrado com sucesso!\n");
     }
 
-    return false;
+    return 0;
+
 }
+
 
 int AtendimentoInicial() {
     system("@cls||clear");
