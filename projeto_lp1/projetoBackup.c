@@ -2,6 +2,12 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef _WIN32
+    #include <windows.h>
+#elif __linux__
+    #include <unistd.h>
+#endif
+
 #define true 1
 #define false 0
 
@@ -11,7 +17,7 @@ int interface();
 int AtendimentoInicial();
 int verificaCpf(char cpf[100]);
 int mensagemAlerta(char msg[100]);
-
+int filaDeAtendimento();
 
 // Variaveis
 int pararPrograma = false;
@@ -74,7 +80,7 @@ int interface() {
 
 int cadastro() {
 
-    char cpf[ 14 ];
+    char cpf[ 100 ];
     char nome[ 50 ];
     char endereco[ 50 ];
     int idade, telefone;
@@ -86,34 +92,34 @@ int cadastro() {
     }
 
     else {
-        printf("Digite o CPF, o PRIMEIO NOME, o BAIRRO (OBS: CASO O BAIRRO SEJA COMPOSTO POR DUAS PALAVRAS, INSIRA APEMAS AS DUAS LETRAS INICIAIS DO NOME), a IDADE e o TELEFONE\n");
-        printf("Aperte CTRL + Z para terminar\n");
-        printf(": ");
+        printf("Digite o CPF\n");
+        scanf("%s", cpf);
+        while (strlen(cpf) != 11){
 
-        scanf("%13s%s%s%d%d", cpf, nome, endereco, &idade, &telefone);
+            printf("Digite um cpf valido (11 digitos sem pontos ou tracos): ");
+            scanf("%s", cpf);
+        }
 
+        printf("O PRIMEIRO NOME\n");
+        scanf("%s", nome);
+        printf("O BAIRRO (CASO O BAIRRO SEJA COMPOSTO POR DUAS PALAVRAS, INSIRA APENAS AS DUAS LETRAS INICIAIS DO NOME)\n");
+        scanf("%s", endereco);
+        printf("A IDADE e o TELEFONE\n");
+        scanf("%d%d", &idade, &telefone);
         if (idade <= 0){
            
             printf("Digite uma idade maior que 0: ");
             scanf("%d", &idade);
             
         }
-        if (strlen(cpf) >= 11 || strlen(cpf) <= 11){
+        
+        printf(": ");
 
-            printf("Digite um cpf valido (11 digitos sem pontos ou tracos): ");
-            scanf("%s", cpf);
-
+        if (!feof(stdin)){
+            fprintf(paPtr, "%s %s %s %d %d\n", cpf, nome, endereco, idade, telefone);
+            fclose(paPtr);
+            mensagemAlerta("\nCliente cadastrado com sucesso!\n");
         }
-            
-        /*while (!feof(stdin)){
-            scanf("%13s%s%s%d%d", cpf, nome, endereco, &idade, &telefone); 
-
-     
-
-        }*/
-        fprintf(paPtr, "%s %s %s %d %d\n", cpf, nome, endereco, idade, telefone);
-        fclose(paPtr);
-        mensagemAlerta("\nCliente cadastrado com sucesso!\n");
     }
 
     return 0;
@@ -190,3 +196,6 @@ int mensagemAlerta(char msg[100])
 
     return 0;
 }
+
+
+
